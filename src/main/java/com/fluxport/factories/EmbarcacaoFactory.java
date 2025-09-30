@@ -8,14 +8,14 @@ import com.fluxport.model.embarcacoes.EmbarcacaoRebocador;
 
 public class EmbarcacaoFactory {
 
-    public static EmbarcacaoBase criarEmbarcacao(TipoEmbarcacao tipo, Long id, String nome, String bandeira, String proprietario) {
+    public static EmbarcacaoBase criarEmbarcacao(TipoEmbarcacao tipo, Long id, String nome, String bandeira, String proprietario, double comprimento, double largura) {
         switch (tipo) {
             case CARGA:
-                return new EmbarcacaoCarga(id, nome, bandeira, proprietario);
+                return new EmbarcacaoCarga(id, nome, bandeira, proprietario, comprimento, largura);
             case PETROLEIRO:
-                return new EmbarcacaoPetroleiro(id, nome, bandeira, proprietario);
+                return new EmbarcacaoPetroleiro(id, nome, bandeira, proprietario, comprimento, largura);
             case REBOCADOR:
-                return new EmbarcacaoRebocador(id, nome, bandeira, proprietario);
+                return new EmbarcacaoRebocador(id, nome, bandeira, proprietario, comprimento, largura);
             default:
                 throw new IllegalArgumentException("Tipo inválido");
         }

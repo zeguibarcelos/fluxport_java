@@ -4,6 +4,7 @@ import com.fluxport.model.Doca;
 import com.fluxport.model.embarcacoes.EmbarcacaoBase;
 import com.fluxport.dto.EmbarcacaoRequest;
 import com.fluxport.factories.EmbarcacaoFactory;
+import com.fluxport.observers.EmbarcacaoLogger;
 import com.fluxport.observers.EventNotifier;
 import com.fluxport.services.DocaService;
 import com.fluxport.strategies.PrimeiroLivreStrategy;
@@ -24,6 +25,7 @@ import com.fluxport.model.embarcacoes.EmbarcacaoCarga;
 import com.fluxport.model.embarcacoes.EmbarcacaoPetroleiro;
 import com.fluxport.model.embarcacoes.EmbarcacaoRebocador;
 import com.fluxport.strategies.DockingStrategy;
+import com.fluxport.strategies.MenorSobraStrategy;
 
 // Controlador principal do projeto
 @RestController
@@ -40,17 +42,11 @@ public class PortoController {
 
         // Cria o notifier e adiciona um listener
         notifier = new EventNotifier();
-        notifier.addListener((EmbarcacaoBase e) -> {
-            System.out.println(
-                    "Evento: Embarcação " + e.getNome()
-                    + " | Bandeira: " + e.getBandeira()
-                    + " | Proprietário: " + e.getProprietario()
-                    + " atracada na doca " + e.getDoca().getNome()
-            );
-        });
+        // No construtor do controller, registrando listeners
+        notifier.addListener(new EmbarcacaoLogger());
 
         // Estrategia de alocação de doca
-        DockingStrategy estrategiaDoca = new PrimeiroLivreStrategy();
+        DockingStrategy estrategiaDoca = new MenorSobraStrategy();
 
         // Inicia o service utilizando a estratégia desejada e passando o notifier
         dockingService = new DocaService(estrategiaDoca, notifier);
@@ -150,7 +146,9 @@ public class PortoController {
                 novoId,
                 request.getNome(),
                 request.getBandeira(),
-                request.getProprietario()
+                request.getProprietario(),
+                request.getComprimento(),
+                request.getLargura()
         );
 
         // Adiciona a embarcação à lista
@@ -172,7 +170,9 @@ public class PortoController {
                     e.getDoca() != null ? e.getDoca().getNome() : null,
                     e.getBandeira(),
                     e.getProprietario(),
-                    e.getTipo().name()
+                    e.getTipo().name(),
+                    e.getComprimento(),
+                    e.getLargura()
             ));
         }
 
