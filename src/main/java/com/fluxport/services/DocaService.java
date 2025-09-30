@@ -7,11 +7,12 @@ import com.fluxport.observers.EventNotifier;
 
 import java.util.List;
 
-public class DockingService {
+public class DocaService {
+
     private DockingStrategy strategy;
     private EventNotifier notifier;
 
-    public DockingService(DockingStrategy strategy, EventNotifier notifier) {
+    public DocaService(DockingStrategy strategy, EventNotifier notifier) {
         this.strategy = strategy;
         this.notifier = notifier;
     }
@@ -29,6 +30,15 @@ public class DockingService {
 
         docaEscolhida.ocupar(e);
         notifier.notifyEmbarcacaoAtracada(e);
+        return true;
+    }
+
+    // Atracar embarcação para uma doca disponível
+    public boolean desatracar(EmbarcacaoBase e) {
+        Doca doca = e.getDoca();
+
+        doca.desocupar(e);
+        // notifier.notifyEmbarcacaoAtracada(e);
         return true;
     }
 }

@@ -4,14 +4,20 @@ import com.fluxport.enums.Status;
 import com.fluxport.model.embarcacoes.EmbarcacaoBase;
 
 public class Doca {
+
     private Long id;
     private String nome;
     private Status status = Status.LIVRE;
     private EmbarcacaoBase embarcacaoAtracada;
 
-    public Doca(Long id, String nome) {
+    private double comprimentoMax; // em metros
+    private double larguraMax;     // em metros
+
+    public Doca(Long id, String nome, double comprimentoMax, double larguraMax) {
         this.id = id;
         this.nome = nome;
+        this.comprimentoMax = comprimentoMax;
+        this.larguraMax = larguraMax;
     }
 
     public boolean isDisponivel() {
@@ -21,10 +27,17 @@ public class Doca {
     public void ocupar(EmbarcacaoBase embarcacao) {
         // Primeiro vinculamos a doca à embarcação
         embarcacao.atracar(this);
-        
+
         // Para então, vincularmos a embarcação à doca e setar o status como ocupada
-        status = Status.OCUPADA;
         this.embarcacaoAtracada = embarcacao;
+        status = Status.OCUPADA;
+    }
+
+    public void desocupar(EmbarcacaoBase embarcacao) {
+        embarcacao.zarpar();
+
+        this.embarcacaoAtracada = null;
+        status = Status.LIVRE;
     }
 
     public void liberar() {
@@ -33,6 +46,14 @@ public class Doca {
 
     public Long getId() {
         return id;
+    }
+
+    public double getComprimentoMax() {
+        return comprimentoMax;
+    }
+
+    public double getLarguraMax() {
+        return larguraMax;
     }
 
     public void setId(Long id) {
